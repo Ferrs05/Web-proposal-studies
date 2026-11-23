@@ -44,13 +44,47 @@ function HeroPixels(){
     h('figure',null,h('canvas',{ref:canvas,width:48,height:48,role:'img','aria-label':'Respons perubahan intensitas kiri dan kanan'}),h('figcaption',null,'Respons filter contoh')));
 }
 
-function Home({done,last}){
+const pauseCaptions=[
+  'Progress hari ini: berhasil membuka website.',
+  'Dosen bilang revisinya sedikit. Yang sedikit ternyata waktu pengerjaannya.',
+  'Bab 4 belum selesai, tapi judul file sudah FINAL_FIX_BENERAN_12.',
+  'Target hari ini satu halaman. Yang selesai satu gelas kopi.',
+  'Katanya tinggal merapikan daftar pustaka. Tiga jam kemudian masih berantem sama satu DOI.',
+  'Buka laptop buat skripsi. Tahu-tahu sudah hafal resep nasi goreng abang-abang.',
+  'Revisi diterima. Maksudnya, pesannya sudah masuk WhatsApp.',
+  'Sidang masih jauh kalau kalendernya ditutup.',
+  'Dosen tanya kendalanya apa. Kendalanya, Pak, saya juga ingin tahu.',
+  'Satu paragraf ditulis, dua paragraf dihapus. Hari ini produktif secara negatif.',
+];
+
+function LandingHero({onProceed}){
+  const pauseCard=useRef(null);
+  const [captionIndex,setCaptionIndex]=useState(-1);
+  const showPause=()=>{
+    const draw=Math.random();
+    setCaptionIndex(previous=>{
+      const next=Math.floor(draw*(pauseCaptions.length-(previous>=0?1:0)));
+      return previous>=0&&next>=previous?next+1:next;
+    });
+    pauseCard.current.showModal();
+  };
+  return h('section',{className:'hero','aria-labelledby':'hero-title'},
+    h('div',null,h('h1',{id:'hero-title'},'Skripsi Kentod'),
+      h('div',{className:'hero-actions'},
+        h('button',{type:'button',className:'primary',onClick:onProceed},'Lanjutkan Kesengsaraan'),
+        h('button',{type:'button','aria-haspopup':'dialog',onClick:showPause},'Gak Ahh Lanjut Bedrooting and Doomscrolling aja'))),
+    h(HeroPixels),
+    h('dialog',{ref:pauseCard,className:'pause-card','aria-labelledby':'pause-title','aria-describedby':'pause-caption'},
+      h('h2',{id:'pause-title'},'Skripsi ditunda secara tidak resmi.'),
+      h('img',{src:'assets/fer-happy.jpg',alt:'',width:48,height:48}),
+      h('p',{id:'pause-caption'},pauseCaptions[captionIndex]),
+      h('form',{method:'dialog'},h('button',{type:'submit',className:'primary'},'Tutup'))));
+}
+
+function Home({done}){
   return h(Fragment,null,
-    h('section',{className:'hero'},
-      h('div',null,h('h1',null,'Belajar proposal FER2013'),h('p',null,'Ikuti perjalanan citra, bongkar cara model belajar, dan latih cara menjelaskan hasil penelitian Anda.'),
-        lessonLink(last||lessons[0].id,last?'Lanjutkan belajar':'Mulai belajar',{className:'button primary'})),
-      h(HeroPixels)),
-    h('section',{className:'section stack'},h('h2',null,'Pilih materi'),h('p',{className:'muted'},'Ikuti urutannya atau buka materi yang ingin Anda pelajari sekarang.'),
+    h('section',{className:'section stack','aria-labelledby':'study-title'},h('h2',{id:'study-title'},'Jalur belajar proposal'),
+      h('p',null,'Mulai dari alasan penelitian, lalu ikuti alur citra, pelatihan, dan evaluasi. Setiap materi juga bisa dibuka langsung saat Anda ingin mendalami satu topik.'),
       h('div',{className:'route-list'},lessons.map((lesson,i)=>h('a',{href:url(lesson.id),key:lesson.id},
         h('span',{className:'num'},String(i+1).padStart(2,'0')),
         h('span',null,h('b',null,lesson.title),h('small',null,lesson.path.slice(0,2).join(' → '))),
@@ -290,18 +324,19 @@ function Lesson({lesson,index,theme,done,toggle}){
     h('section',{className:'section stack'},
       h('button',{'aria-pressed':done,onClick:toggle},done?'Sudah dipelajari':'Tandai sudah dipelajari'),
       h('nav',{className:'footer-nav','aria-label':'Materi sebelumnya dan berikutnya'},
-        index>0?lessonLink(lessons[index-1].id,'← '+lessons[index-1].title):lessonLink('awal','← Beranda'),
-        index<lessons.length-1?lessonLink(lessons[index+1].id,lessons[index+1].title+' →'):lessonLink('awal','Kembali ke daftar materi'))));
+        index>0?lessonLink(lessons[index-1].id,'← '+lessons[index-1].title):lessonLink('belajar','← Beranda'),
+        index<lessons.length-1?lessonLink(lessons[index+1].id,lessons[index+1].title+' →'):lessonLink('belajar','Kembali ke daftar materi'))));
 }
 
 function App(){
   const [current,setCurrent]=useState(route);
+  const [entered,setEntered]=useState(false);
   const [done,setDone]=useState(()=>read('atlas-fer-done',[]));
-  const [last,setLast]=useState(()=>read('atlas-fer-last',null));
   const [theme,setTheme]=useState(()=>read('atlas-fer-theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
   const content=useRef(null);
   const index=lessons.findIndex(l=>l.id===current);
   const isReference=current==='rujukan'||current.startsWith('rujukan/');
+  const isStudyRoute=index>=0||isReference||current==='cari'||current==='belajar';
   useEffect(()=>{
     const change=()=>setCurrent(route());
     addEventListener('hashchange',change);
@@ -312,22 +347,28 @@ function App(){
     save('atlas-fer-theme',theme);
   },[theme]);
   useEffect(()=>{
-    if(index>=0){setLast(current);save('atlas-fer-last',current)}
     window.scrollTo(0,0);
-  },[current,index]);
+    if(entered)content.current?.focus({preventScroll:true});
+  },[current,entered]);
   const toggle=()=>{
     const next=done.includes(current)?done.filter(x=>x!==current):[...done,current];
     setDone(next);save('atlas-fer-done',next);
   };
   const activeLink=(id,label,active,props={})=>lessonLink(id,label,{'aria-current':active?'page':undefined,...props});
-  let page=h(Home,{done,last});
+  if(!entered||!isStudyRoute){
+    return h('main',null,h(LandingHero,{onProceed:()=>{
+      if(!isStudyRoute)location.hash='belajar';
+      setEntered(true);
+    }}));
+  }
+  let page=h(Home,{done});
   if(index>=0)page=h(Lesson,{key:current,lesson:lessons[index],index,theme,done:done.includes(current),toggle});
   if(isReference)page=h(Reference,{id:current.split('/')[1]||'1'});
   if(current==='cari')page=h(Search);
   return h(Fragment,null,
     h('a',{href:'#materi',className:'skip',onClick:event=>{event.preventDefault();content.current.focus()}},'Lewati ke materi'),
     h('header',{className:'top'},h('div',{className:'top-inner'},
-      lessonLink('awal',h(Fragment,null,h('span',{className:'mark','aria-hidden':true},Array.from({length:9},(_,i)=>h('i',{key:i}))),'Atlas FER2013'),{className:'brand'}),
+      lessonLink('belajar',h(Fragment,null,h('span',{className:'mark','aria-hidden':true},Array.from({length:9},(_,i)=>h('i',{key:i}))),'Atlas FER2013'),{className:'brand'}),
       h('nav',{className:'top-links','aria-label':'Navigasi utama'},
         activeLink('rujukan','Rujukan',isReference,{className:'sources'}),activeLink('cari','Cari',current==='cari'),
         h('button',{onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'Tema terang':'Tema gelap')))),
@@ -339,7 +380,7 @@ function App(){
         h('progress',{'aria-label':'Materi dipelajari',value:done.length,max:lessons.length})),
       h('nav',{className:'mobile-nav source-select','aria-label':'Pilih materi'},h('label',{htmlFor:'mobile-route'},'Buka bagian'),
         h('select',{id:'mobile-route',value:isReference?'rujukan':current,onChange:e=>{location.hash=e.target.value}},
-          h('option',{value:'awal'},'Beranda'),...lessons.map(l=>h('option',{key:l.id,value:l.id},l.title)),
+          h('option',{value:'belajar'},'Beranda'),...lessons.map(l=>h('option',{key:l.id,value:l.id},l.title)),
           h('option',{value:'rujukan'},'Rujukan proposal'),h('option',{value:'cari'},'Cari topik')),
         h('span',{className:'mobile-progress'},done.length+' dari '+lessons.length+' dipelajari')),
       h('main',{id:'materi',className:'content',ref:content,tabIndex:-1},page)));

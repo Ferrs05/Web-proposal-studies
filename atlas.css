@@ -115,16 +115,40 @@ button:disabled { opacity: .6; cursor: default; }
 .content:focus { outline: none; }
 
 .hero {
+  min-height: 100vh;
+  min-height: 100svh;
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
   gap: clamp(24px, 4vw, 60px);
   align-items: center;
-  padding: clamp(20px, 4vw, 55px);
+  padding: clamp(20px, 6vw, 108px) max(clamp(19px, 6vw, 108px), calc((100vw - 1240px) / 2));
   background: var(--tint);
-  border-radius: 22px;
 }
-.hero h1 { max-width: 17ch; font-size: clamp(2.4rem, 4.3vw, 3.95rem); }
-.hero p { margin: 17px 0 23px; font-size: 1.1rem; color: var(--muted); }
+.hero h1 { max-width: 12ch; font-size: clamp(3.4rem, 8vw, 7.5rem); font-weight: 800; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.hero-actions button { text-align: left; max-width: 100%; }
+.pause-card {
+  width: min(26rem, calc(100% - 2rem));
+  max-height: calc(100% - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+  padding: clamp(1rem, 5vw, 2rem);
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  text-align: center;
+}
+.pause-card::backdrop { background: rgb(28 30 46 / .58); }
+.pause-card img {
+  display: block;
+  width: clamp(64px, 24vw, 108px);
+  height: auto;
+  margin: 15px auto;
+  image-rendering: pixelated;
+  border-radius: 7px;
+}
+.pause-card p { margin: 0 auto 15px; }
 .hero-visual { gap: clamp(8px, 1.3vw, 17px); background: var(--plate); padding: clamp(10px, 1.6vw, 20px); border-radius: 14px; align-items: start; }
 .hero-visual figure { min-width: 0; }
 .hero-visual img, .hero-visual canvas { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: 5px; }
@@ -201,7 +225,7 @@ input[type="range"] { width: 100%; max-width: 500px; accent-color: var(--accent)
 
 @media (max-width: 1020px) {
   .shell { grid-template-columns: minmax(175px, 200px) minmax(0, 1fr); gap: 22px; }
-  .hero { padding: 24px; gap: 20px; }
+  .hero { gap: 20px; }
 }
 @media (max-width: 760px) {
   .shell { display: block; padding-top: 12px; }
@@ -223,6 +247,7 @@ input[type="range"] { width: 100%; max-width: 500px; accent-color: var(--accent)
   .mobile-progress { grid-area: 1 / 2; color: var(--muted); font-size: .83rem; }
   .content { scroll-margin-top: 155px; }
   .hero, .pairs, .route-list { grid-template-columns: minmax(0, 1fr); }
+  .hero { align-content: center; }
   .hero-visual { max-width: 420px; }
   .top-links { gap: 3px; }
   .top-links a, .top-links button { font-size: .87rem; padding-inline: 7px; }
@@ -233,7 +258,10 @@ input[type="range"] { width: 100%; max-width: 500px; accent-color: var(--accent)
   .brand { font-size: .96rem; gap: 7px; }
   .mark { width: 26px; height: 26px; }
   .hero { padding: 19px; }
-  .hero h1 { font-size: clamp(2rem, 10vw, 2.4rem); }
+  .hero h1 { font-size: clamp(2.8rem, 12vw, 3.4rem); }
+  .hero-actions button { width: 100%; }
+  .pause-card form button { width: 100%; }
+  .hero-visual { max-width: 250px; }
   .lab .matrix-center th, .lab .matrix-center td { padding: 5px 2px; font-size: .87rem; }
   .lab .matrix-center button { padding-inline: 4px; }
 }
