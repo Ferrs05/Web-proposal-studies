@@ -72,7 +72,7 @@ function LandingHero({onProceed}){
     h('div',null,h('h1',{id:'hero-title'},'Skripsi Kentod'),
       h('div',{className:'hero-actions'},
         h('button',{type:'button',className:'primary',onClick:onProceed},'Lanjutkan Kesengsaraan'),
-        h('button',{type:'button','aria-haspopup':'dialog',onClick:showPause},'Gak Ahh Lanjut Bedrooting and Doomscrolling aja'))),
+        h('button',{type:'button','aria-haspopup':'dialog',onClick:showPause},'Gak Ahh Lanjut Bed Rotting and Doomscrolling aja'))),
     h(HeroPixels),
     h('dialog',{ref:pauseCard,className:'pause-card','aria-labelledby':'pause-title','aria-describedby':'pause-caption'},
       h('h2',{id:'pause-title'},'Skripsi ditunda secara tidak resmi.'),
