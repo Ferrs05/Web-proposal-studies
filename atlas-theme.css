@@ -1,0 +1,48 @@
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("assets/source-sans-3.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Literata";
+  src: url("assets/literata.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --paper: #f4f2ef;
+  --panel: #fcfaf7;
+  --ink: #2c2d3b;
+  --muted: #55596a;
+  --line: #d5d1d5;
+  --control-line: #83869a;
+  --accent: #434f86;
+  --tint: #e6e8f2;
+  --accent-text: #fff;
+  --rail: #eeebeb;
+  --plate: #d9ddec;
+  --font-sans: "Source Sans 3", system-ui, sans-serif;
+  --font-display: "Literata", Georgia, serif;
+  --font-mono: Consolas, monospace;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #242633;
+  --panel: #2c2e3d;
+  --ink: #e9e7ee;
+  --muted: #bcbccc;
+  --line: #494b5f;
+  --control-line: #8589a4;
+  --accent: #c1caf2;
+  --tint: #383c54;
+  --accent-text: #252940;
+  --rail: #292b3a;
+  --plate: #343950;
+}

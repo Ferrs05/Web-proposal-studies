@@ -1,0 +1,57 @@
+:root {
+  --background: var(--panel);
+  --foreground: var(--ink);
+  --muted-foreground: var(--muted);
+  --card: var(--panel);
+  --secondary: var(--tint);
+  --border: var(--line);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-text);
+  --ring: var(--accent);
+  --chart-1: var(--accent);
+  --chart-2: var(--accent);
+}
+
+body {
+  padding: clamp(12px, 2.5vw, 28px);
+  font: 16px/1.6 var(--font-sans);
+  background: var(--panel);
+}
+img, svg { max-width: 100%; }
+body h1, body h2 { font-family: var(--font-display); font-weight: 500; letter-spacing: -.025em; }
+body h1 { font-size: clamp(1.55rem, 4vw, 2.4rem); line-height: 1.15; }
+body h2, body .main h2 { font-size: clamp(1.25rem, 3vw, 1.68rem); line-height: 1.3; }
+body p { max-width: 66ch; }
+body p.lead, body p.text, body p.note, body details { font-size: 1rem; }
+body .small, body small, body figcaption { font-size: .875rem; }
+body .main, #lesson { border-top: 1px solid var(--line); }
+body button, body select { border-color: var(--control-line); min-height: 40px; }
+body .control, body .flow b, body .tab, body .arch-row { font-size: .94rem; }
+body .note { border-inline-start-width: 2px; border-radius: 0 8px 8px 0; }
+body :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+body table { font-size: .92rem; }
+body .context label { flex-wrap: wrap; }
+
+#stages { gap: 11px; margin-block: 22px; }
+.diagram { padding: 8px; border-radius: 13px; background: var(--tint); }
+.diagram .region { padding: 8px; border: 0; background: transparent; }
+.diagram .backbone { border: 1px solid var(--control-line); border-radius: 8px; }
+.diagram .node { border-color: var(--line); padding: 10px; }
+.diagram .node:hover, .diagram .node[aria-pressed="true"] { border-color: var(--accent); }
+.diagram .node[aria-pressed="true"] { background: var(--card); }
+.diagram .node strong, .diagram .region-label { font-size: .94rem; }
+.diagram .node .shape, .block-map .shape { font: 600 .875rem/1.3 var(--font-sans); font-variant-numeric: tabular-nums; }
+.diagram .shape span { white-space: nowrap; }
+.diagram .stride-branch { min-height: 36px; font-size: .83rem; }
+.diagram-key, .map-title p { font-size: .875rem; }
+.block-map .block-node { background: var(--tint); padding: 10px; }
+.block-map .block-node b { font-size: .94rem; }
+.pictures img, #feature { filter: brightness(.96) contrast(.89); }
+
+@media (max-width: 480px) {
+  .diagram { padding: 5px; }
+  .diagram .region { gap: 5px; padding: 7px; }
+  .diagram .node { padding: 7px; }
+  .diagram .stride-branch { min-height: 40px; }
+  #lesson th, #lesson td { padding-inline: 3px; font-size: .83rem; }
+}
